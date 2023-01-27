@@ -31,15 +31,10 @@ def lambda_handler(event, context):
       'body': json.dumps({'error': f'Invalid dates: {str(e)}'})
     }
   
- 
-
-  data = get_ticker_data(ticker, from_date, to_date)
-
-  # TODO implement
   return {
     'statusCode': 200,
     'headers': {'Content-Type': 'application/json'},
-    'body': json.dumps(data)
+    'body': json.dumps(get_ticker_data(ticker, from_date, to_date))
   }
 
 def get_date_range(event):
@@ -80,22 +75,3 @@ def get_ticker_data(ticker, from_date, to_date):
 def get_return(start_price, end_price):
   r = 100 * ((end_price - start_price) / start_price)
   return str(f'{round(r, 2)}%')
-# today = datetime.date.today()
-
-# day = datetime.date.fromisoformat('202s1-02-02')
-# delta = datetime.timedelta(days=365)
-# print(day.isoformat())
-
-# try:
-#   raise Exception('hi')
-# except Exception as exception:
-#   b = {'h': str(exception)}
-#   print(b)
-
-# to_date = datetime.date.fromisoformat('2021-12-31')
-# from_date = to_date.replace(month=1).replace(day=1)
-# print(to_date - from_date)
-# print(to_date - from_date > datetime.timedelta(days=365))
-# print(to_date, from_date)
-
-print(lambda_handler({'queryStringParameters': { "to_date": "2023-01-21", "from_date": "2021-01-01", 'ticker': 'aapl' }}, {}))
