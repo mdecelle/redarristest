@@ -3,34 +3,43 @@ import os
 import requests
 import datetime
 
-# iex_url = os.environ['API_URL']
-# api_key = os.environ['API_KEY']
-
-iex_url = 'https://redarriscodetest.iex.cloud'
-api_key = 'sk_2a4d536996344654a179760ded154cec'
+iex_url = os.environ['API_URL']
+api_key = os.environ['API_KEY']
 
 def lambda_handler(event, context):
+  if not event.get('queryStringParameters'):
+    return {
+      'statusCode': 400,
+      'headers': {'Content-Type': 'application/json'},
+      'body': json.dumps({'error': 'No parameters specfied'})
+    }
+
+  ticker = event['queryStringParameters'].get('ticker')
+  if not ticker:
+    return {
+      'statusCode': 400,
+      'headers': {'Content-Type': 'application/json'},
+      'body': json.dumps({'error': 'Ticker must be specified'})
+    }
+
   try:
     from_date, to_date = get_date_range(event)
   except Exception as e:
     return {
       'statusCode': 400,
-      'body': f'Invalid dates: {str(e)}'
+      'headers': {'Content-Type': 'application/json'},
+      'body': json.dumps({'error': f'Invalid dates: {str(e)}'})
     }
   
-  ticker = event['queryStringParameters'].get('ticker')
-  if not ticker:
-    return {
-      'statusCode': 400,
-      'body': "Ticker must be specified"
-    }
+ 
 
   data = get_ticker_data(ticker, from_date, to_date)
 
   # TODO implement
   return {
-      'statusCode': 200,
-      'body': json.dumps(data)
+    'statusCode': 200,
+    'headers': {'Content-Type': 'application/json'},
+    'body': json.dumps(data)
   }
 
 def get_date_range(event):
