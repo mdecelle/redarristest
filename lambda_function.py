@@ -57,10 +57,10 @@ def get_date_range(event):
       to_date = datetime.date.fromisoformat(to_date_raw)
       from_date = datetime.date.fromisoformat(from_date_raw)
     except:
-      raise Exception('Dates should be in the format "YYYY-MM-DD"')
+      raise Exception("Dates should be in the format 'YYYY-MM-DD'")
   
   if to_date < from_date:
-    raise Exception('To date cannot be before the from_date')
+    raise Exception('To date cannot be before the from date')
   
   if from_date.year < 2007:
     raise Exception('Data only available from 2007 onward')
